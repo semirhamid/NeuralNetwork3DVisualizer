@@ -40,7 +40,7 @@ const Node: React.FC<NodeProps> = ({ position, weight, color }) => {
 
   return (
     <mesh position={position} castShadow receiveShadow>
-      <sphereGeometry args={[weight * 0.1, 48, 48]} />
+      <sphereGeometry args={[weight * 0.15, 48, 48]} />
       <meshStandardMaterial map={texture} />
     </mesh>
   );

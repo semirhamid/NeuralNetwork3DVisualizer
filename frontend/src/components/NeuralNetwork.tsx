@@ -41,18 +41,36 @@ const NeuralNetwork: React.FC = () => {
         { id: 10, layer: 'output', position: [3, 1, 0], weight: 2.2 },
         { id: 11, layer: 'output', position: [3, -1, 0], weight: 2.2 },
       ],
-      weights: [
-        { source: 1, target: 4, value: Math.random(), color: 'red' },
-        { source: 2, target: 5, value: Math.random(), color: 'green' },
-        { source: 3, target: 6, value: Math.random(), color: 'blue' },
-        { source: 4, target: 7, value: Math.random(), color: 'yellow' },
-        { source: 5, target: 8, value: Math.random(), color: 'purple' },
-        { source: 6, target: 9, value: Math.random(), color: 'orange' },
-        { source: 7, target: 10, value: Math.random(), color: 'pink' },
-        { source: 8, target: 11, value: Math.random(), color: 'cyan' },
-        { source: 9, target: 10, value: Math.random(), color: 'magenta' },
-      ],
+      weights: [],
     };
+
+    // Create dense connections between layers
+    const inputNeurons = initialData.neurons.filter(n => n.layer === 'input');
+    const hiddenNeurons = initialData.neurons.filter(n => n.layer === 'hidden');
+    const outputNeurons = initialData.neurons.filter(n => n.layer === 'output');
+
+    inputNeurons.forEach(inputNeuron => {
+      hiddenNeurons.forEach(hiddenNeuron => {
+        initialData.weights.push({
+          source: inputNeuron.id,
+          target: hiddenNeuron.id,
+          value: Math.random(),
+          color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+        });
+      });
+    });
+
+    hiddenNeurons.forEach(hiddenNeuron => {
+      outputNeurons.forEach(outputNeuron => {
+        initialData.weights.push({
+          source: hiddenNeuron.id,
+          target: outputNeuron.id,
+          value: Math.random(),
+          color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+        });
+      });
+    });
+
     setMlpData(initialData);
 
     // Update the MLP data every 200 ms
@@ -63,15 +81,17 @@ const NeuralNetwork: React.FC = () => {
         // Update weights and neuron sizes
         const updatedNeurons = prevData.neurons.map(neuron => ({
           ...neuron,
-          weight: Math.random() * 3 + 1, // Random weight between 1 and 4
+          weight: Math.random() * 1.5 + 1, // Random weight between 1 and 4
         }));
 
-        const updatedWeights = prevData.weights.map(weight => ({
-          ...weight,
-          value: Math.random(), // Random weight value
-          target: prevData.neurons[Math.floor(Math.random() * prevData.neurons.length)].id, // Random target neuron
-          color: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // Random color
-        }));
+        const updatedWeights = prevData.weights.map(weight => {
+          const newValue = Math.random(); // New random weight value
+          return {
+            ...weight,
+            value: weight.value + (newValue - weight.value) * 0.1, // Gradual change
+            color: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // Random color
+          };
+        });
 
         return {
           neurons: updatedNeurons,
@@ -92,9 +112,9 @@ const NeuralNetwork: React.FC = () => {
   };
 
   return (
-    <Canvas shadows>
+    <Canvas shadows camera={{ fov: 50, position: [0, 0, 15] }}>
       <OrbitControls />
-      <ambientLight intensity={0.5} />
+      <ambientLight intensity={0.7} />
       <pointLight position={[10, 10, 10]} castShadow />
       {mlpData.neurons.map((neuron) => (
         <Node key={neuron.id} {...neuron} color={layerColors[neuron.layer]} />
@@ -111,14 +131,14 @@ const NeuralNetwork: React.FC = () => {
             key={index}
             points={[sourceNeuron.position, targetNeuron.position]}
             color={weight.color}
-            lineWidth={weight.value * 4} // Adjust line width based on weight value
+            lineWidth={weight.value * 2} // Adjust line width based on weight value
           />
         );
       })}
-      <Text position={[-6, 3, 0]} fontSize={0.2} color="black">Input Layer</Text>
-      <Text position={[-4, 3, 0]} fontSize={0.2} color="black">1st Hidden Layer</Text>
-      <Text position={[0, 3, 0]} fontSize={0.2} color="black">2nd Hidden Layer</Text>
-      <Text position={[3, 3, 0]} fontSize={0.2} color="black">Output Layer</Text>
+      <Text position={[-6, 3, 0]} fontSize={0.2} fontWeight={"bold"} color="white">Input Layer</Text>
+      <Text position={[-4, 3, 0]} fontSize={0.2} fontWeight={"bold"} color="white">1st Hidden Layer</Text>
+      <Text position={[0, 3, 0]} fontSize={0.2} fontWeight={"bold"} color="white">2nd Hidden Layer</Text>
+      <Text position={[3, 3, 0]} fontSize={0.2} fontWeight={"bold"} color="white">Output Layer</Text>
     </Canvas>
   );
 };
