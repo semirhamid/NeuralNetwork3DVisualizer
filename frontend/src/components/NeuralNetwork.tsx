@@ -22,17 +22,19 @@ const NeuralNetwork: React.FC = () => {
   const [neuronSpacing, setNeuronSpacing] = useState(DEFAULT_NEURON_SPACING);
   const [nodeSize, setNodeSize] = useState(DEFAULT_NODE_SIZE);
 
+  const [currentEpoch, setCurrentEpoch] = useState<number>(0);
+
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:8000');
 
     socket.onopen = () => console.log('WebSocket connection established');
     socket.onmessage = (event) => {
       const receivedData: TrainingData = JSON.parse(event.data);
-      console.log('Received data:', receivedData);
 
       if (receivedData.epoch && receivedData.layers) {
         setMlpData(receivedData.layers);
         setModelMetadata(receivedData.model_structure);
+        setCurrentEpoch(receivedData.epoch);
       } else {
         console.error('Invalid data format received from WebSocket');
       }
@@ -58,10 +60,8 @@ const NeuralNetwork: React.FC = () => {
   return (
     <div className="flex overflow-y-hidden max-h-screen">
       {/* Sidebar */}
-      <section className="">
-        <Sidebar modelMetadata={modelMetadata} />
-
-        {/* Controls */}
+      <section className="overflow-scroll overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 no-scrollbar">
+        <Sidebar modelMetadata={modelMetadata} currentEpoch={currentEpoch} />
         <SliderControls
           layerSpacing={layerSpacing}
           setLayerSpacing={setLayerSpacing}

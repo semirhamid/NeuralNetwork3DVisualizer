@@ -1,6 +1,7 @@
 import asyncio
 
-from app.models.abc import start_server
+from app.websockets.server import start_server
+
 
 
 async def main():

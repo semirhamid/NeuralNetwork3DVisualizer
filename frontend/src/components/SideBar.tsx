@@ -1,17 +1,27 @@
-import { ModelStructure } from "./types";
+import { ModelStructure } from './types';
 
 // Sidebar Component
-export const Sidebar: React.FC<{ modelMetadata: ModelStructure }> = ({ modelMetadata }) => (
-  <div className="w-72 bg-gray-800 text-white p-3 shadow-lg">
+export const Sidebar: React.FC<{
+  modelMetadata: ModelStructure;
+  currentEpoch: number;
+}> = ({ modelMetadata, currentEpoch }) => (
+  <div className="w-80 bg-gray-800 text-white p-3 shadow-lg">
     <h2 className="text-xl font-semibold mb-4">Model Metadata</h2>
     <p className="mb-2">
-      <strong className="text-gray-300">Total Layers:</strong> {modelMetadata.total_layers}
+      <strong className="text-gray-300">Total Layers:</strong>{' '}
+      {modelMetadata.total_layers}
     </p>
     <p className="mb-2">
-      <strong className="text-gray-300">Total Epoch:</strong> {modelMetadata.total_epochs}
+      <strong className="text-gray-300">Total Epoch:</strong>{' '}
+      {modelMetadata.total_epochs}
     </p>
     <p className="mb-2">
-      <strong className="text-gray-300">Total Params:</strong> {modelMetadata.total_params}
+      <strong className="text-gray-300">Current Epoch:</strong>
+      <span className="text-red-700 font-extrabold">{currentEpoch}</span>
+    </p>
+    <p className="mb-2">
+      <strong className="text-gray-300">Total Params:</strong>{' '}
+      {modelMetadata.total_params}
     </p>
     <h3 className="text-lg font-medium mb-2">Layer Details:</h3>
     <ul className="space-y-3">
@@ -38,8 +48,15 @@ export const SliderControls: React.FC<{
   setNeuronSpacing: (value: number) => void;
   nodeSize: number;
   setNodeSize: (value: number) => void;
-}> = ({ layerSpacing, setLayerSpacing, neuronSpacing, setNeuronSpacing, nodeSize, setNodeSize }) => (
-  <div className="w-72 bg-gray-800 text-white h-screen p-4 shadow-lg">
+}> = ({
+  layerSpacing,
+  setLayerSpacing,
+  neuronSpacing,
+  setNeuronSpacing,
+  nodeSize,
+  setNodeSize,
+}) => (
+  <div className="w-80 bg-gray-800 text-white h-screen p-4 shadow-lg">
     <h3 className="text-lg font-medium mb-4">Controls</h3>
     <div className="space-y-4">
       <div>

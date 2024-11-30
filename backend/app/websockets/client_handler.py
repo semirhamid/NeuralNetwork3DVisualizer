@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import DataLoader, TensorDataset
-from training.trainer import Trainer
-from models.simple_nn import SimpleNN
+from app.training.trainer import Trainer
+from app.models.simple_nn import SimpleNN
 import torch.nn as nn
 import torch.optim as optim
 
