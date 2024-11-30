@@ -81,14 +81,21 @@ const NeuralNetwork: React.FC = () => {
 
           {/* Render Neurons */}
           {neuronPositions.map((layer, layerIndex) =>
-            layer.map((position, neuronIndex) => (
-              <Node
-                key={`neuron-${layerIndex}-${neuronIndex}`}
-                position={position}
-                color={LAYER_COLORS[layerIndex % LAYER_COLORS.length]}
-                nodeSize={nodeSize}
-              />
-            ))
+            layer.map((position, neuronIndex) => {
+              const bias = mlpData[layerIndex].biases
+                ? mlpData[layerIndex].biases[neuronIndex]
+                : null;
+
+              return (
+                <Node
+                  key={`neuron-${layerIndex}-${neuronIndex}`}
+                  position={position}
+                  color={LAYER_COLORS[layerIndex % LAYER_COLORS.length]}
+                  nodeSize={nodeSize}
+                  bias={bias}
+                />
+              );
+            })
           )}
 
           {/* Render Connections */}
