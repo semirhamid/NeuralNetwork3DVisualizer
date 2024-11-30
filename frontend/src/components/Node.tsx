@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sphere, Box } from '@react-three/drei';
+import { Sphere } from '@react-three/drei';
 
 interface NodeProps {
   position: [number, number, number];
@@ -18,9 +18,9 @@ const Node: React.FC<NodeProps> = ({ position, color, nodeSize, bias }) => {
   const biasSize = bias ? Math.abs(bias) * nodeSize : nodeSize;
 
   return bias !== null ? (
-    <Box position={position} args={[biasSize, biasSize, biasSize]}>
+    <Sphere position={position} args={[biasSize, 16, 16]}>
       <meshStandardMaterial color={biasColor} />
-    </Box>
+    </Sphere>
   ) : (
     <Sphere position={position} args={[nodeSize, 16, 16]}>
       <meshStandardMaterial color={color} />
