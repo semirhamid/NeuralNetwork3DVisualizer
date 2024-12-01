@@ -78,6 +78,46 @@ Focuses on rendering the 3D visualization and enabling user interactions:
 - **`requirements.txt`**: Lists Python dependencies for the backend.  
 - **`package.json`**: Contains dependencies and scripts for the frontend.  
 
+
+## API Contract: WebSocket Training Data Payload
+
+This document outlines the structure and rules for the WebSocket payload sent during the training process. Developers can use this information to extend the functionality of the system without breaking existing features.
+
+---
+
+### **Payload Overview**
+The WebSocket sends a JSON object for each training step, containing metadata about the training process, model structure, and layer details. This payload is structured as follows:
+
+```json
+{
+  "epoch": <integer>,              // Current epoch number (1-indexed)
+  "batch": <integer>,              // Current batch number (1-indexed)
+  "loss": <float>,                 // Current loss value
+  "learning_rate": <float>,        // Current learning rate
+  "batch_size": <integer>,         // Number of samples in the current batch
+  "model_structure": {             // Metadata about the model
+    "total_layers": <integer>,     // Total number of layers
+    "total_params": <integer>,     // Total number of trainable parameters
+    "total_epochs": <integer>,     // Total number of epochs
+    "layer_details": [             // Details of each layer
+      {
+        "layer_name": <string>,    // Name of the layer
+        "input_size": <integer>,   // Input size of the layer
+        "output_size": <integer>   // Output size of the layer
+      }
+    ]
+  },
+  "layers": [                      // Training details for each layer
+    {
+      "layer": <string>,           // Name of the parameter (e.g., "fc1.weight")
+      "weights": <array>,          // Current weights of the parameter
+      "gradients": <array|null>,   // Gradients of the parameter (if available)
+      "biases": <array>            // Bias values (if applicable)
+    }
+  ]
+}
+
+
 ---
 
 ## 🚀 How to Run
