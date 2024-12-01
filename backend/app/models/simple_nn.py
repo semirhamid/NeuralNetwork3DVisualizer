@@ -4,10 +4,10 @@ import torch.nn as nn
 class SimpleNN(nn.Module):
     def __init__(self):
         super(SimpleNN, self).__init__()
-        self.fc0 = nn.Linear(3, 3)
-        self.fc1 = nn.Linear(3, 16)
-        self.fc2 = nn.Linear(16, 12)
-        self.fc3 = nn.Linear(12, 8)
+        self.fc0 = nn.Linear(3, 8)
+        self.fc1 = nn.Linear(8, 16)  # Expanding layer
+        self.fc2 = nn.Linear(16, 16)  # Core layer
+        self.fc3 = nn.Linear(16, 8)  # Contracting layer
         self.fc4 = nn.Linear(8, 4)
         self.fc5 = nn.Linear(4, 2)
 
