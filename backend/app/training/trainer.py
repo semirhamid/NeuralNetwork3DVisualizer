@@ -1,13 +1,13 @@
 import torch.nn as nn
 import json
 import asyncio
-
 import websockets
 
 
 class Trainer:
     @staticmethod
     async def train(model, data_loader, criterion, optimizer, websocket, num_epochs=5):
+        # Collect model structure details
         model_structure = {
             "total_layers": len(list(model.children())),
             "total_params": sum(p.numel() for p in model.parameters()),
@@ -23,25 +23,40 @@ class Trainer:
             ],
         }
 
+        # Training loop
         for epoch in range(num_epochs):
-            for inputs, targets in data_loader:
+            for batch_idx, (inputs, targets) in enumerate(data_loader):
                 optimizer.zero_grad()
                 outputs = model(inputs)
                 loss = criterion(outputs, targets)
                 loss.backward()
                 optimizer.step()
 
-                training_data = {"epoch": epoch + 1, "layers": [], "model_structure": model_structure}
-                for name, param in model.named_parameters():
-                    layer_data = {
-                        "layer": name,
-                        "weights": param.data.tolist(),
-                    }
-                    if "weight" in name:
-                        training_data["layers"].append(layer_data)
-                    elif "bias" in name:
-                        training_data["layers"][-1]["biases"] = param.data.tolist()
+                # Prepare metadata to send
+                training_data = {
+                    "epoch": epoch + 1,
+                    "batch": batch_idx + 1,
+                    "loss": loss.item(),  # Include the loss value
+                    "learning_rate": optimizer.param_groups[0]["lr"],  # Include learning rate
+                    "batch_size": inputs.size(0),  # Include batch size
+                    "model_structure": model_structure,
+                    "layers": [],
+                }
 
+                # Add weights, biases, and gradients for each layer
+                for name, param in model.named_parameters():
+                    if "weight" in name or "bias" in name:
+                        layer_data = {
+                            "layer": name,
+                            "weights": param.data.tolist(),  # Weights
+                            "gradients": param.grad.tolist() if param.grad is not None else None,  # Gradients
+                        }
+                        if "bias" in name:
+                            training_data["layers"][-1]["biases"] = param.data.tolist()  # Add biases to last layer
+                        else:
+                            training_data["layers"].append(layer_data)
+
+                # Send data via WebSocket
                 try:
                     await websocket.send(json.dumps(training_data))
                     await asyncio.sleep(3)
