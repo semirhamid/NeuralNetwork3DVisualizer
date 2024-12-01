@@ -18,7 +18,20 @@ export interface ModelStructure {
 
 export interface TrainingData {
   epoch: number;
+  batch: number;
+  batch_size: number;
+  learning_rate: number;
+  loss: number;
   layers: LayerData[];
   model_structure: ModelStructure;
 }
 
+
+
+export interface ModelMetaData {
+  epoch: number;
+  batch: number;
+  batch_size: number;
+  learning_rate: number;
+  loss: number;
+}

@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Sidebar, SliderControls } from './SideBar';
-import { LayerData, ModelStructure, TrainingData } from './types';
+import {
+  LayerData,
+  ModelMetaData,
+  ModelStructure,
+  TrainingData,
+} from './types';
 import Node from './Node';
 import Edge from './Edge';
 import {
@@ -12,6 +17,7 @@ import {
   LAYER_COLORS,
 } from '../constants';
 import { calculateNeuronPositions } from '../utils/calculations';
+import LoadingComponent from './LoadingComponent';
 
 const NeuralNetwork: React.FC = () => {
   const [mlpData, setMlpData] = useState<LayerData[] | null>(null);
@@ -21,6 +27,7 @@ const NeuralNetwork: React.FC = () => {
   const [layerSpacing, setLayerSpacing] = useState(DEFAULT_LAYER_SPACING);
   const [neuronSpacing, setNeuronSpacing] = useState(DEFAULT_NEURON_SPACING);
   const [nodeSize, setNodeSize] = useState(DEFAULT_NODE_SIZE);
+  const [metaData, setMetaData] = useState<ModelMetaData | null>(null);
 
   const [currentEpoch, setCurrentEpoch] = useState<number>(0);
 
@@ -35,6 +42,14 @@ const NeuralNetwork: React.FC = () => {
         setMlpData(receivedData.layers);
         setModelMetadata(receivedData.model_structure);
         setCurrentEpoch(receivedData.epoch);
+        const metaData: ModelMetaData = {
+          epoch: receivedData.epoch,
+          batch: receivedData.batch,
+          batch_size: receivedData.batch_size,
+          learning_rate: receivedData.learning_rate,
+          loss: receivedData.loss,
+        };
+        setMetaData(metaData);
       } else {
         console.error('Invalid data format received from WebSocket');
       }
@@ -48,8 +63,7 @@ const NeuralNetwork: React.FC = () => {
     };
   }, []);
 
-  if (!mlpData || !modelMetadata)
-    return <div>Loading Neural Network Visualization...</div>;
+  if (!mlpData || !modelMetadata) return <LoadingComponent />;
 
   const neuronPositions = calculateNeuronPositions(
     mlpData,
@@ -61,7 +75,11 @@ const NeuralNetwork: React.FC = () => {
     <div className="flex overflow-y-hidden max-h-screen">
       {/* Sidebar */}
       <section className="overflow-scroll overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 no-scrollbar">
-        <Sidebar modelMetadata={modelMetadata} currentEpoch={currentEpoch} />
+        <Sidebar
+          modelMetadata={modelMetadata}
+          currentEpoch={currentEpoch}
+          meta={metaData}
+        />
         <SliderControls
           layerSpacing={layerSpacing}
           setLayerSpacing={setLayerSpacing}
