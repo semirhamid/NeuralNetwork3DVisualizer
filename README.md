@@ -15,7 +15,8 @@
 
 - **Spacious Display Area**  
   A large rendering space for exploring and interacting with even the most complex network structures.  
-  ![Image showcasing display area](https://github.com/user-attachments/assets/a5f4fccf-4a47-4ea0-b335-83b5480e248b)
+![image](https://github.com/user-attachments/assets/a0cd7dd6-7612-40ce-a3fd-ae1626d7653d)
+
 
 ---
 
