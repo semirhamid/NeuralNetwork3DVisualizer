@@ -83,7 +83,6 @@ Focuses on rendering the 3D visualization and enabling user interactions:
 
 This document outlines the structure and rules for the WebSocket payload sent during the training process. Developers can use this information to extend the functionality of the system without breaking existing features.
 
----
 
 ### **Payload Overview**
 The WebSocket sends a JSON object for each training step, containing metadata about the training process, model structure, and layer details. This payload is structured as follows:
