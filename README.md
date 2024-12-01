@@ -1,7 +1,7 @@
 
-# MLP-Visualizer-3D
+# Neural-Network-3D-Visualizer
 
-**MLP-Visualizer-3D** is an interactive 3D visualization tool for exploring the structure and weights of a Multilayer Perceptron (MLP) neural network. Built using Python (for generating and training data) and Three.js (for rendering a 3D graph), this tool provides an engaging way to visualize and interact with the structure and dynamics of neural networks.
+**Neural-Network-3D-Visualizer** is an interactive 3D visualization tool for exploring the structure and weights of a Multilayer Perceptron (MLP) neural network. Built using Python (for generating and training data) and Three.js (for rendering a 3D graph), this tool provides an engaging way to visualize and interact with the structure and dynamics of neural networks.
 
 ## 🌟 Features
 
